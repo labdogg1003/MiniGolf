@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 	void switchHole()
 	{
 		//End the hole if it is the last hole
-		if(currentHole == holes.size())
+		if(currentHole == holes.Count)
 		{
 			endGame();
 		}
@@ -44,19 +44,19 @@ public class GameManager : MonoBehaviour
 		}
 	}
 	
-	void EndGame()
+	void endGame()
 	{
 		//TODO: Create the end game method
 	}
 	
-	void addPlayer( Player player )
+	void addPlayer( player player )
 	{
-		players.add(player);
+		players.Add(player);
 	}
 	
 	void addHole( Hole hole )
 	{
-		holes.add(hole);
+		holes.Add(hole);
 	}
 	
 	void showScoreCard()

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour 
+public class player : MonoBehaviour 
 {
 	//This Might Change to the game manager handling the camera
 	public Transform camera;
@@ -15,10 +15,10 @@ public class Player : MonoBehaviour
 	private bool hole_finished;
 			
 	//Holds the strokes for the hole, reset at the start of each hole
-	private strokes = 0; 
+	private int strokes = 0; 
 		
 	//Allows the player to hold 2 power-ups at a time.
-	public powerUp[2] PowerUps;
+	public powerUp[] PowerUps = new powerUp[2];
 		
     // Use this for initialization
     void Start () 
@@ -37,26 +37,26 @@ public class Player : MonoBehaviour
     //Add Powerup to array.
     void addPowerUp(powerUp p)
     {
-      if(powerUp[0] == null)
+      if(PowerUps[0] == null)
       {
-          powerUp[0] = p;
+		PowerUps[0] = p;
       }
       else
       {
-        powerUp[1] = powerUp[0];
-        powerUp[0] = p;
+		PowerUps[1] = PowerUps[0];
+		PowerUps[0] = p;
       }
     }
     
     void usePowerUp()
     {
-      if(powerUp[0] == null)
+		if(PowerUps[0] == null)
       {
       }
       else
       {
-        powerUp[1] = null;
-        powerUp[0] = powerUp[1];
+		PowerUps[1] = null;
+		PowerUps[0] = PowerUps[1];
       }
     }
     
@@ -66,12 +66,12 @@ public class Player : MonoBehaviour
     void holeReset()
     {
     	//add our final stroke count to the scorecard
-    	Score.add(strokes)
+		Score.Add(strokes);
     	
     	//Reset the finished boolean
-    	finishedHole = false;
+    	hole_finished = false;
     		
     	//Reset the stroke Counter
-    	Strokes = 0;
+    	strokes = 0;
     }
 }
