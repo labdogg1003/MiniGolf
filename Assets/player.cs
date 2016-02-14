@@ -4,10 +4,10 @@ using System.Collections;
 public class player : MonoBehaviour 
 {
 	//This Might Change to the game manager handling the camera
-	public Transform camera;
+	public GameObject camera;
 		
 	public Transform cameraFocus;
-	public GameObject ball;
+	public Transform ball;
 		
 	//Holds the score for the player -- ArrayList to allow flexibility on hole count
 	public ArrayList Score;
@@ -35,8 +35,10 @@ public class player : MonoBehaviour
     //TODO: Add power up manager scripts
     
     //Add Powerup to array.
-    void addPowerUp(powerUp p)
+    public void addPowerUp(powerUp p)
     {
+		Debug.Log(p.powerUpType);
+
       if(PowerUps[0] == null)
       {
 		PowerUps[0] = p;
@@ -48,13 +50,18 @@ public class player : MonoBehaviour
       }
     }
     
-    void usePowerUp()
+    public void usePowerUp()
     {
-		if(PowerUps[0] == null)
+	  if(PowerUps[0] == null)
       {
+		// do nothing if no power ups.
       }
       else
       {
+		//use the first power up
+		PowerUps[0].usePowerUp(this);
+		
+		//move the last power up to the first power up slot.
 		PowerUps[1] = null;
 		PowerUps[0] = PowerUps[1];
       }

@@ -7,7 +7,7 @@ using System.Collections;
  *  are on in the array
  */
 
-public class GameManager : MonoBehaviour
+public class Game : MonoBehaviour
 {
 	
 	public Camera mainCamera;

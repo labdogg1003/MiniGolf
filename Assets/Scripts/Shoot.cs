@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Shoot : MonoBehaviour
 {
-	public Transform target;
-	public GameObject camera;
+	//public Transform target;
+	//public GameObject camera;
+	public player currentPlayer;
 	private bool shootBall = false;
 	private float power = 0.0f;
 	public float PowerMultiplier = 700f;
@@ -20,9 +21,9 @@ public class Shoot : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		Debug.DrawRay(target.transform.position, getPlanarForward(this.gameObject), Color.green, 4, false);
+		Debug.DrawRay(currentPlayer.ball.transform.position, getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
 
-		distToGround = target.GetComponent<Collider>().bounds.extents.y;
+		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
 		if (!Input.GetMouseButton(0)) 
 		{
@@ -55,7 +56,7 @@ public class Shoot : MonoBehaviour
 				shootBall = true;
 			}
 			if (Input.GetMouseButtonUp(0) && shootBall == true) {
-				target.GetComponent<Rigidbody>().AddForce(getPlanarForward(camera) * (power * PowerMultiplier));
+				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
 				//stop shooting the ball
 				shootBall = false;
@@ -66,7 +67,7 @@ public class Shoot : MonoBehaviour
 			if (Input.GetKeyDown("space") && IsGrounded()) 
 			{
 				Debug.Log("Jump");
-				target.GetComponent<Rigidbody>().AddForce(Vector3.up * (1000));
+				currentPlayer.usePowerUp();
 			}
 		}
 
@@ -92,9 +93,9 @@ public class Shoot : MonoBehaviour
 
 	public void OnCollisionStay(Collision collisionInfo)
 	{
-		Debug.Log(target.GetComponent<Rigidbody>().velocity.x + target.GetComponent<Rigidbody>().velocity.y + target.GetComponent<Rigidbody>().velocity.z);
-		if ((target.GetComponent<Rigidbody>().velocity.x + target.GetComponent<Rigidbody>().velocity.y + target.GetComponent<Rigidbody>().velocity.z) > 0.1f) {
-			if ((target.GetComponent<Rigidbody>().velocity.x + target.GetComponent<Rigidbody>().velocity.y + target.GetComponent<Rigidbody>().velocity.z) < 1.2) {
+		Debug.Log(currentPlayer.ball.GetComponent<Rigidbody>().velocity.x + currentPlayer.ball.GetComponent<Rigidbody>().velocity.y + currentPlayer.ball.GetComponent<Rigidbody>().velocity.z);
+		if ((currentPlayer.ball.GetComponent<Rigidbody>().velocity.x + currentPlayer.ball.GetComponent<Rigidbody>().velocity.y + currentPlayer.ball.GetComponent<Rigidbody>().velocity.z) > 0.1f) {
+			if ((currentPlayer.ball.GetComponent<Rigidbody>().velocity.x + currentPlayer.ball.GetComponent<Rigidbody>().velocity.y + currentPlayer.ball.GetComponent<Rigidbody>().velocity.z) < 1.2) {
 			//	target.GetComponent<Rigidbody>().drag += .0001f;
 			}
 		} else {
@@ -104,6 +105,6 @@ public class Shoot : MonoBehaviour
 
 	public bool IsGrounded()
 	{
-		return Physics.Raycast(target.transform.position, -Vector3.up, distToGround + 0.3f);
+		return Physics.Raycast(currentPlayer.ball.transform.position, -Vector3.up, distToGround + 0.3f);
 	}
 }
