@@ -37,8 +37,6 @@ public class player : MonoBehaviour
     //Add Powerup to array.
     public void addPowerUp(powerUp p)
     {
-		Debug.Log(p.powerUpType);
-
       if(PowerUps[0] == null)
       {
 		PowerUps[0] = p;
@@ -61,9 +59,10 @@ public class player : MonoBehaviour
 		//use the first power up
 		PowerUps[0].usePowerUp(this);
 		
-		//move the last power up to the first power up slot.
-		PowerUps[1] = null;
+		//move the last power up to the first power up slot and delete the second powerup
+		PowerUps[0] = null;
 		PowerUps[0] = PowerUps[1];
+		PowerUps[1] = null;
       }
     }
     

@@ -9,6 +9,7 @@ public class powerUp : MonoBehaviour
 
 	//power up variables
 	public int springPower = 1000;
+	public bool active = true;
 
 
 	// Use this for initialization
@@ -20,7 +21,19 @@ public class powerUp : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-	
+		if (!active)
+		{
+			float targetScale = 0.0001f;
+			float shrinkSpeed = 10f;
+			this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(targetScale, targetScale, targetScale), Time.deltaTime*shrinkSpeed);
+		}
+
+		if (active)
+		{
+			float targetScale = 0.0108f;
+			float shrinkSpeed = 5f;
+			this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(targetScale, targetScale, targetScale), Time.deltaTime*shrinkSpeed);
+		}
 	}
 
 	//pass our player into the powerUp
@@ -38,15 +51,13 @@ public class powerUp : MonoBehaviour
 
 	void OnTriggerEnter(Collider obj)
 	{
-		Debug.Log(obj.tag);
-
-		if(obj.tag == "ball")
+		if(obj.tag == "ball" && active)
 		{
-			Debug.Log("Trigger Hit");
-
 			obj.GetComponentInParent<player>().addPowerUp(this);
-		}
-		
+
+			//set power up inactive
+			active = false;
+		}	
 	}
 }
 
