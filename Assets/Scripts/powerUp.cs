@@ -30,7 +30,7 @@ public class powerUp : MonoBehaviour
 
 		if (active)
 		{
-			float targetScale = 0.0108f;
+			float targetScale = 0.019f;
 			float shrinkSpeed = 5f;
 			this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(targetScale, targetScale, targetScale), Time.deltaTime*shrinkSpeed);
 		}

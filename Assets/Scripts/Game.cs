@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*
  *	This is our game manager that handles all switching of
@@ -11,8 +12,9 @@ public class Game : MonoBehaviour
 {
 	
 	public Camera mainCamera;
-	public ArrayList players;
-	private player currentPlayer {get; set;}
+	public List<player> players;
+	private int currentPlayerNumber = 0;
+	public player currentPlayer {get; set;}
 	public ArrayList holes;
 	private int currentHole {get; set;}
 	
@@ -22,6 +24,7 @@ public class Game : MonoBehaviour
 	
 	void Update()
 	{
+		switchPlayer();
 	}
 	
 	void switchHole()
@@ -57,6 +60,36 @@ public class Game : MonoBehaviour
 	void addHole( Hole hole )
 	{
 		holes.Add(hole);
+	}
+
+	void switchPlayer()
+	{
+		if (currentPlayer == null) 
+		{
+			//check if we dont have a current player //i.e. start of game
+			currentPlayerNumber = 0;
+
+			//set our current player to the next player
+			currentPlayer = (player)players[currentPlayerNumber];
+		} 
+		else if(currentPlayerNumber == players.Count - 1)
+		{
+			//set the current player back to the start
+			currentPlayerNumber = 0;
+
+			//set our current player to the next player
+			currentPlayer = (player)players[currentPlayerNumber];
+		}
+		else
+		{
+			//increment the current player by 1
+			currentPlayerNumber ++;
+
+			//set our current player to the next player
+			currentPlayer = (player)players[currentPlayerNumber];
+		}
+
+		Debug.Log("CurrentPlayer is : " + currentPlayerNumber);
 	}
 	
 	void showScoreCard()

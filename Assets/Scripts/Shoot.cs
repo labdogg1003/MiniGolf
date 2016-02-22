@@ -13,6 +13,8 @@ public class Shoot : MonoBehaviour
 	private int zeroTime = 0;
 	private float distToGround = 0;
 
+	bool canShoot = true;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -32,8 +34,8 @@ public class Shoot : MonoBehaviour
 		
 		if (zeroTime < 1) 
 		{
-			if (Input.GetMouseButton(0)) {
-				//power up
+			if (Input.GetMouseButton(0)) 
+			{
 				if (power < 3.0f && countup) {
 					power += Time.deltaTime * 2f;
 				} else if (power < 0) {
@@ -48,25 +50,33 @@ public class Shoot : MonoBehaviour
 			}
 		
 
-			if (Input.GetMouseButtonDown(0)) {
+			if (Input.GetMouseButtonDown(0))
+			{
 				//reset power
 				resetPower();
 
 				//tell the game we are ready to shoot
 				shootBall = true;
 			}
-			if (Input.GetMouseButtonUp(0) && shootBall == true) {
+			if (Input.GetMouseButtonUp(0) && shootBall == true && canShoot) {
 				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
 				//stop shooting the ball
 				shootBall = false;
 
 				resetPower();
+
+				//get our currentplayer and increment their strokes
+				FindObjectOfType<Game>().currentPlayer.strokes++;
 			}
 
-			if (Input.GetKeyDown("space") && IsGrounded()) 
+			if (Input.GetKeyDown("space")) 
 			{
-				Debug.Log("Jump");
+				Debug.Log("Power Up : " 
+					+ currentPlayer.PowerUps[0].powerUpType.ToString()
+					+ " used by "
+					+ currentPlayer.name);
+
 				currentPlayer.usePowerUp();
 			}
 		}

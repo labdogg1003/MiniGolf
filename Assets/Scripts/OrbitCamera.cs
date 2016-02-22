@@ -4,7 +4,6 @@ using System.Collections;
 [AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
 public class OrbitCamera : MonoBehaviour 
 {
-	private SphereCollider ownCollider;
 	public Transform target;
 	public float distance = 5.0f;
 	public float xSpeed = 120.0f;
@@ -39,8 +38,8 @@ public class OrbitCamera : MonoBehaviour
 
 	void LateUpdate () 
 	{
-		Debug.DrawRay(target.transform.position, getPlanarForward(this.gameObject), Color.green, 4, false);
-		Debug.DrawLine(this.transform.position, target.transform.position, Color.red);
+		//Debug.DrawRay(target.transform.position, getPlanarForward(this.gameObject), Color.green, 4, false);
+		//Debug.DrawLine(this.transform.position, target.transform.position, Color.red);
 
 		Ray ray = new Ray(this.transform.position, this.transform.forward);
 
@@ -51,7 +50,7 @@ public class OrbitCamera : MonoBehaviour
 			Vector3 Direction = Quaternion.AngleAxis(getHitAngle(hit2.normal, ray), transform.forward) * transform.forward;
 
 			//Debug.Log("Angle :" + getHitAngle(hit2.normal, ray));
-			Debug.DrawRay(target.transform.position, Direction, Color.blue, 4, false);
+			//Debug.DrawRay(target.transform.position, Direction, Color.blue, 4, false);
 		}
 
 		if (target) 
@@ -75,8 +74,10 @@ public class OrbitCamera : MonoBehaviour
 			Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
 			Vector3 position = rotation * negDistance + target.position;
 
-			transform.rotation = rotation;
-			transform.position = Vector3.Slerp(transform.position,position, 2f);
+
+			//Slerp the camera movement so that we have a smooth transition between positions and rotations
+			transform.rotation = Quaternion.Slerp(transform.rotation,rotation,.7f);
+			transform.position = Vector3.Slerp(transform.position,position, .7f);
 		}
 	}
 

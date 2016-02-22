@@ -5,7 +5,8 @@ public class player : MonoBehaviour
 {
 	//This Might Change to the game manager handling the camera
 	public GameObject camera;
-		
+	public string name = "";	
+
 	public Transform cameraFocus;
 	public Transform ball;
 		
@@ -13,9 +14,11 @@ public class player : MonoBehaviour
 	public ArrayList Score;
 		
 	private bool hole_finished;
+	private bool end_of_turn;
+
 			
 	//Holds the strokes for the hole, reset at the start of each hole
-	private int strokes = 0; 
+	public int strokes = 0; 
 		
 	//Allows the player to hold 2 power-ups at a time.
 	public powerUp[] PowerUps = new powerUp[2];
@@ -29,7 +32,7 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update () 
     {
-    
+    	
     }
     
     //TODO: Add power up manager scripts
