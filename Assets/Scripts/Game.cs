@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,17 +18,22 @@ public class Game : MonoBehaviour
 	public player currentPlayer {get; set;}
 	public ArrayList holes;
 	private int currentHole {get; set;}
+
+	//get ui components
+	public Text tName;
+	public Text tStrokes;
+	public Text tCourse;
 	
 	void Start()
-	{
-	}
-	
-	void Update()
 	{
 		switchPlayer();
 	}
 	
-	void switchHole()
+	void Update()
+	{
+	}
+	
+	public void switchHole()
 	{
 		//End the hole if it is the last hole
 		if(currentHole == holes.Count)
@@ -62,7 +68,7 @@ public class Game : MonoBehaviour
 		holes.Add(hole);
 	}
 
-	void switchPlayer()
+	public void switchPlayer()
 	{
 		if (currentPlayer == null) 
 		{
@@ -89,7 +95,17 @@ public class Game : MonoBehaviour
 			currentPlayer = (player)players[currentPlayerNumber];
 		}
 
-		Debug.Log("CurrentPlayer is : " + currentPlayerNumber);
+		//reset the hit boolean values
+		mainCamera.GetComponent<Shoot>().canShoot = true;
+		mainCamera.GetComponent<Shoot>().hasBeenHit = false;
+
+		//Switch Camera to current player
+		currentPlayer.camera = mainCamera.gameObject;
+		currentPlayer.camera.GetComponent<OrbitCamera>().target = currentPlayer.cameraFocus;
+
+		//Set the gui components to match our current character
+		tName.text = currentPlayer.name;
+		tStrokes.text = currentPlayer.strokes.ToString();
 	}
 	
 	void showScoreCard()

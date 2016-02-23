@@ -13,16 +13,22 @@ public class Shoot : MonoBehaviour
 	private int zeroTime = 0;
 	private float distToGround = 0;
 
-	bool canShoot = true;
+	public bool hasBeenHit = false;
+	public bool canShoot = true;
+
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 	
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
+		//TODO: There has to be another way to do this
+		currentPlayer = FindObjectOfType<Game>().currentPlayer;
+
 		Debug.DrawRay(currentPlayer.ball.transform.position, getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
@@ -58,7 +64,7 @@ public class Shoot : MonoBehaviour
 				//tell the game we are ready to shoot
 				shootBall = true;
 			}
-			if (Input.GetMouseButtonUp(0) && shootBall == true && canShoot) {
+			if (Input.GetMouseButtonUp(0) && shootBall == true && !hasBeenHit) {
 				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
 				//stop shooting the ball
@@ -68,6 +74,9 @@ public class Shoot : MonoBehaviour
 
 				//get our currentplayer and increment their strokes
 				FindObjectOfType<Game>().currentPlayer.strokes++;
+
+				//Dont Allow Them to Shoot Again
+				hasBeenHit = true;
 			}
 
 			if (Input.GetKeyDown("space")) 
@@ -79,6 +88,16 @@ public class Shoot : MonoBehaviour
 
 				currentPlayer.usePowerUp();
 			}
+		}
+
+		//Check that the ball has already been hit and that it is sleeping to end their turn
+		if(hasBeenHit && currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping())
+		{
+			
+			changeCamera();
+
+			FindObjectOfType<Game>().switchPlayer();
+			Debug.Log("Turn Over Switching To Next Player");
 		}
 
 		float powerPerc = power / 3.0f;
@@ -111,6 +130,13 @@ public class Shoot : MonoBehaviour
 		} else {
 			//target.GetComponent<Rigidbody>().drag = 0f;
 		}
+	}
+
+	public void changeCamera()
+	{
+		
+		currentPlayer.camera = null;
+		Debug.Log(currentPlayer.camera == null);
 	}
 
 	public bool IsGrounded()

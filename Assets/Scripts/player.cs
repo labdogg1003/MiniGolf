@@ -13,10 +13,9 @@ public class player : MonoBehaviour
 	//Holds the score for the player -- ArrayList to allow flexibility on hole count
 	public ArrayList Score;
 		
-	private bool hole_finished;
-	private bool end_of_turn;
+	private bool hole_finished = false;
 
-			
+		
 	//Holds the strokes for the hole, reset at the start of each hole
 	public int strokes = 0; 
 		
@@ -32,7 +31,6 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void Update () 
     {
-    	
     }
     
     //TODO: Add power up manager scripts
