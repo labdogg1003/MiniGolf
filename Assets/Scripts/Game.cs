@@ -18,7 +18,10 @@ public class Game : MonoBehaviour
 	public player currentPlayer {get; set;}
 	public ArrayList holes;
 	private int currentHole {get; set;}
+	public GameObject GameUI;
+	private List<GameObject> Children = new List<GameObject>();
 
+	//TODO: These should all be called through the GameUI script
 	//get ui components
 	public Text tName;
 	public Text tStrokes;
@@ -26,6 +29,15 @@ public class Game : MonoBehaviour
 	
 	void Start()
 	{
+		//Grab all UI panels that we have access to.
+		foreach (Transform child in GameUI.transform)
+		{
+			Children.Add(child.gameObject);
+		}
+
+		//Switch To Our Game UI
+		SwitchUIElement("InGameUI");
+
 		switchPlayer();
 	}
 	
@@ -35,7 +47,7 @@ public class Game : MonoBehaviour
 	
 	public void switchHole()
 	{
-		//End the hole if it is the last hole
+		//End the ho	le if it is the last hole
 		if(currentHole == holes.Count)
 		{
 			endGame();
@@ -112,6 +124,37 @@ public class Game : MonoBehaviour
 	{
 		//TODO: Create scorecard Method
 	}
-	
-	
+
+	void SwitchUIElement(string ui_element)
+	{
+		int element_num = -1;
+
+		//check that the element exists
+		for (int i = 0; i < Children.Count; i++) 
+		{
+			if (Children[i].name == ui_element) 
+			{
+				//return the position in the array
+				element_num = i;
+				break;           
+			} 
+		}
+
+		//Check that we found our element
+		if (element_num != -1) 
+		{
+			//Iterate from 0 to count
+			for (int i = 0; i < Children.Count; i++) 
+			{
+				if(i == element_num)
+				{
+					Children[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					Children[i].gameObject.SetActive(false);
+				}
+			}
+		}
+	}
 }

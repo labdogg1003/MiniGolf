@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Shoot : MonoBehaviour
 {
@@ -29,7 +30,8 @@ public class Shoot : MonoBehaviour
 		//TODO: There has to be another way to do this
 		currentPlayer = FindObjectOfType<Game>().currentPlayer;
 
-		Debug.DrawRay(currentPlayer.ball.transform.position, getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
+		Debug.DrawRay(currentPlayer.ball.transform.position, 
+			getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
@@ -100,7 +102,9 @@ public class Shoot : MonoBehaviour
 			Debug.Log("Turn Over Switching To Next Player");
 		}
 
-		float powerPerc = power / 3.0f;
+		float powerPerc = (power / 3.0f) / 2;
+		Debug.Log(powerPerc);
+		GameObject.Find("GameManager").GetComponent<Game>().GameUI.transform.FindChild("InGameUI").FindChild("PowerMeterFill").GetComponent<Image>().fillAmount = powerPerc;
 
 	}
 
