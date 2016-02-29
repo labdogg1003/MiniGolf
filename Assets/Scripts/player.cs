@@ -13,6 +13,7 @@ public class player : MonoBehaviour
 	//Holds the score for the player -- ArrayList to allow flexibility on hole count
 	public ArrayList Score;
 		
+	//Check that user has finished the hole
 	private bool hole_finished = false;
 
 		
@@ -25,7 +26,6 @@ public class player : MonoBehaviour
     // Use this for initialization
     void Start () 
     {
-    
     }
     
     // Update is called once per frame

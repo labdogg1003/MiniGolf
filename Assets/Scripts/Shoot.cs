@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class Shoot : MonoBehaviour
 {
-	//public Transform target;
-	//public GameObject camera;
 	public player currentPlayer;
 	private bool shootBall = false;
 	private float power = 0.0f;
@@ -27,7 +25,6 @@ public class Shoot : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//TODO: There has to be another way to do this
 		currentPlayer = FindObjectOfType<Game>().currentPlayer;
 
 		Debug.DrawRay(currentPlayer.ball.transform.position, 
@@ -42,8 +39,17 @@ public class Shoot : MonoBehaviour
 		
 		if (zeroTime < 1) 
 		{
-			if (Input.GetMouseButton(0)) 
+			if (Input.GetMouseButton(0) && !hasBeenHit) 
 			{
+				if (Input.GetMouseButtonDown(0))
+				{
+					//reset power
+					resetPower();
+
+					//tell the game we are ready to shoot
+					shootBall = true;
+				}
+
 				if (power < 3.0f && countup) {
 					power += Time.deltaTime * 2f;
 				} else if (power < 0) {
@@ -65,8 +71,13 @@ public class Shoot : MonoBehaviour
 
 				//tell the game we are ready to shoot
 				shootBall = true;
+
+
 			}
-			if (Input.GetMouseButtonUp(0) && shootBall == true && !hasBeenHit) {
+
+			// Here we need to check multiple boolean statements to make sure we are
+			// first able to hit the ball and second that we are ready to hit the ball
+			if (Input.GetMouseButtonUp(0) && shootBall == true && !hasBeenHit && power > 0.001f) {
 				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
 				//stop shooting the ball
@@ -103,8 +114,7 @@ public class Shoot : MonoBehaviour
 		}
 
 		float powerPerc = (power / 3.0f) / 2;
-		Debug.Log(powerPerc);
-		GameObject.Find("GameManager").GetComponent<Game>().GameUI.transform.FindChild("InGameUI").FindChild("PowerMeterFill").GetComponent<Image>().fillAmount = powerPerc;
+		GameObject.Find("GameManager").GetComponent<Game>().GameUI.transform.FindChild("InGameUI").FindChild("PowerMeter").FindChild("PowerMeterFill").GetComponent<Image>().fillAmount = powerPerc;
 
 	}
 

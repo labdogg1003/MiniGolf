@@ -39,10 +39,13 @@ public class Game : MonoBehaviour
 		SwitchUIElement("InGameUI");
 
 		switchPlayer();
+
+		showCurrentPowerUp();
 	}
 	
 	void Update()
 	{
+		showCurrentPowerUp();
 	}
 	
 	public void switchHole()
@@ -80,6 +83,8 @@ public class Game : MonoBehaviour
 		holes.Add(hole);
 	}
 
+	//Shoot Script references this when it sees that 
+	//the current player is done with their turn.
 	public void switchPlayer()
 	{
 		if (currentPlayer == null) 
@@ -125,6 +130,8 @@ public class Game : MonoBehaviour
 		//TODO: Create scorecard Method
 	}
 
+
+	//TODO: Move to UI Manager
 	void SwitchUIElement(string ui_element)
 	{
 		int element_num = -1;
@@ -155,6 +162,36 @@ public class Game : MonoBehaviour
 					Children[i].gameObject.SetActive(false);
 				}
 			}
+		}
+	}
+
+	//TODO: Move to UI Manager
+	void showCurrentPowerUp()
+	{
+		Image powerUpImage = GameUI.transform.FindChild("InGameUI").FindChild("PowerMeter").FindChild("PowerUp").GetComponent<Image>();
+		string powerUpName;
+
+		//get the current player and see what their current powerup is
+		if(currentPlayer.PowerUps[0] != null)
+		{
+			powerUpName = currentPlayer.PowerUps[0].powerUpType.ToString();
+		}
+		else
+		{
+			powerUpName = "null";
+		}
+
+		//load that sprite into the power up texture.
+		switch(powerUpName)
+		{
+			case "spring":
+			{
+					powerUpImage.overrideSprite = Resources.Load<Sprite>("PowerUpTextures/SpringPowerUpTexture");
+					break;	
+			}
+			default:
+					powerUpImage.overrideSprite = null;
+					break;
 		}
 	}
 }
