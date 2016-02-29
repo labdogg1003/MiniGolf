@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		//dynamicUIPosition(GameUI.transform.FindChild("InGameUI").FindChild("TopLeft").gameObject, new Vector2(70,Screen.height-50));
 	}
 		
 	void SwitchUIElement(string ui_element)
@@ -111,5 +112,12 @@ public class UIManager : MonoBehaviour
 				powerUpImage.overrideSprite = null;
 				break;
 		}
+	}
+
+
+	void dynamicUIPosition(GameObject screenPanel, Vector2 newPosition)
+	{
+		//screenPanel.transform.position = new Vector3(Screen.width/2, Screen.height/2,0);
+		screenPanel.transform.position = newPosition;
 	}
 }
