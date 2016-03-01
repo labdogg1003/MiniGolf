@@ -17,35 +17,28 @@ public class Game : MonoBehaviour
 	private int currentPlayerNumber = 0;
 	public player currentPlayer {get; set;}
 	public ArrayList holes;
+	public UIManager UI;
 	private int currentHole {get; set;}
-	public GameObject GameUI;
 	private List<GameObject> Children = new List<GameObject>();
 
-	//TODO: These should all be called through the GameUI script
-	//get ui components
-	public Text tName;
-	public Text tStrokes;
-	public Text tCourse;
 	
 	void Start()
 	{
-		//Grab all UI panels that we have access to.
-		foreach (Transform child in GameUI.transform)
-		{
-			Children.Add(child.gameObject);
-		}
+		//Get Our UI Manager
+		UI = this.GetComponent<UIManager>();
 
 		//Switch To Our Game UI
-		SwitchUIElement("InGameUI");
+		UI.SwitchUIElement("InGameUI");
 
 		switchPlayer();
 
-		showCurrentPowerUp();
+		UI.updateCurrentPowerUp(currentPlayer);
 	}
 	
 	void Update()
 	{
-		showCurrentPowerUp();
+		//This should move to remove unnecessary calls
+		//showCurrentPowerUp();
 	}
 	
 	public void switchHole()
@@ -121,77 +114,14 @@ public class Game : MonoBehaviour
 		currentPlayer.camera.GetComponent<OrbitCamera>().target = currentPlayer.cameraFocus;
 
 		//Set the gui components to match our current character
-		tName.text = currentPlayer.name;
-		tStrokes.text = currentPlayer.strokes.ToString();
+		UI.updateGameInfo(currentPlayer.name,currentPlayer.strokes.ToString(), currentHole.ToString());
+	
+		//Set the power up element in the UI.
+		UI.updateCurrentPowerUp(currentPlayer);
 	}
 	
 	void showScoreCard()
 	{
 		//TODO: Create scorecard Method
-	}
-
-
-	//TODO: Move to UI Manager
-	void SwitchUIElement(string ui_element)
-	{
-		int element_num = -1;
-
-		//check that the element exists
-		for (int i = 0; i < Children.Count; i++) 
-		{
-			if (Children[i].name == ui_element) 
-			{
-				//return the position in the array
-				element_num = i;
-				break;           
-			} 
-		}
-
-		//Check that we found our element
-		if (element_num != -1) 
-		{
-			//Iterate from 0 to count
-			for (int i = 0; i < Children.Count; i++) 
-			{
-				if(i == element_num)
-				{
-					Children[i].gameObject.SetActive(true);
-				}
-				else
-				{
-					Children[i].gameObject.SetActive(false);
-				}
-			}
-		}
-	}
-
-	//TODO: Move to UI Manager
-	void showCurrentPowerUp()
-	{
-		Image powerUpImage = GameUI.transform.FindChild("InGameUI").FindChild("PowerMeter").FindChild("PowerUp").GetComponent<Image>();
-		string powerUpName;
-
-		//get the current player and see what their current powerup is
-		if(currentPlayer.PowerUps[0] != null)
-		{
-			powerUpName = currentPlayer.PowerUps[0].powerUpType.ToString();
-		}
-		else
-		{
-			powerUpName = "null";
-		}
-
-		//load that sprite into the power up texture.
-		switch(powerUpName)
-		{
-			case "spring":
-			{
-					powerUpImage.overrideSprite = Resources.Load<Sprite>("PowerUpTextures/SpringPowerUpTexture");
-					break;	
-			}
-			default:
-					powerUpImage.overrideSprite = null;
-					break;
-		}
 	}
 }

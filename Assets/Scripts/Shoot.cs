@@ -100,6 +100,8 @@ public class Shoot : MonoBehaviour
 					+ currentPlayer.name);
 
 				currentPlayer.usePowerUp();
+				GameObject.Find("GameManager").GetComponent<Game>().UI.updateCurrentPowerUp(currentPlayer);
+
 			}
 		}
 
@@ -114,8 +116,7 @@ public class Shoot : MonoBehaviour
 		}
 
 		float powerPerc = (power / 3.0f) / 2;
-		GameObject.Find("GameManager").GetComponent<Game>().GameUI.transform.FindChild("InGameUI").FindChild("PowerMeter").FindChild("PowerMeterFill").GetComponent<Image>().fillAmount = powerPerc;
-
+		GameObject.Find("GameManager").GetComponent<Game>().UI.updatePowerMeter(powerPerc);
 	}
 
 	public static Vector3 getPlanarForward(GameObject t)

@@ -47,6 +47,12 @@ public class player : MonoBehaviour
 		PowerUps[1] = PowerUps[0];
 		PowerUps[0] = p;
       }
+
+		if(this.gameObject.Equals(GameObject.Find("GameManager").GetComponent<Game>().currentPlayer));
+		{
+			//only change the ui if this player is the same as the current player
+			GameObject.Find("GameManager").GetComponent<Game>().UI.updateCurrentPowerUp(this);
+		}
     }
     
     public void usePowerUp()
