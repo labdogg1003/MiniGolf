@@ -6,6 +6,10 @@ public enum powerupType{spring};
 public class powerUp : MonoBehaviour
 {
 	public powerupType powerUpType;
+	float ShrinkScale = 0.00001f;
+	float GrowScale = 0.019f;
+	float shrinkSpeed = 10f;
+	float growSpeed = 5f;
 
 	//power up variables
 	private int springPower = 1000;
@@ -15,7 +19,6 @@ public class powerUp : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
 	}
 	
 	// Update is called once per frame
@@ -44,27 +47,34 @@ public class powerUp : MonoBehaviour
 
 			//set power up inactive
 			active = false;
-			checkActive();
+			StartCoroutine(checkActive());
 		}	
 	}
 
-	void checkActive()
+	IEnumerator checkActive()
 	{
+		float elapsedTime = 0;
+
 		if (!active)
 		{
-			float targetScale = 0.0001f;
-			float shrinkSpeed = 10f;
-			this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(targetScale, targetScale, targetScale), Time.deltaTime*shrinkSpeed);
+			while(elapsedTime < shrinkSpeed)
+			{
+				this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(ShrinkScale, ShrinkScale, ShrinkScale), elapsedTime / shrinkSpeed);
+				elapsedTime += Time.deltaTime;
+				yield return new WaitForEndOfFrame();
+			}
 		}
 
 		if (active)
 		{
-			float targetScale = 0.019f;
-			float shrinkSpeed = 5f;
-			this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(targetScale, targetScale, targetScale), Time.deltaTime*shrinkSpeed);
+			while(elapsedTime < growSpeed)
+			{
+				this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(GrowScale,GrowScale,GrowScale),elapsedTime / growSpeed);
+				elapsedTime += Time.deltaTime;
+				yield return new WaitForEndOfFrame();
+			}
 		}
 	}
-
 
 	public void respawn()
 	{

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Shoot : MonoBehaviour
+public class Shoot : MessageBehaviour
 {
 	public player currentPlayer;
 	private bool shootBall = false;
@@ -15,11 +15,13 @@ public class Shoot : MonoBehaviour
 	public bool hasBeenHit = false;
 	public bool canShoot = true;
 
+	private Game game;
+
 
 	// Use this for initialization
-	void Start () 
+	protected override void OnStart () 
 	{
-	
+		game = GameObject.FindObjectOfType<Game>();
 	}
 
 	// Update is called once per frame
@@ -92,7 +94,7 @@ public class Shoot : MonoBehaviour
 				hasBeenHit = true;
 			}
 
-			if (Input.GetKeyDown("space")) 
+			if (Input.GetKeyDown("space") && currentPlayer.ball.GetComponent<Rigidbody>().velocity.magnitude > 0.001f) 
 			{
 				Debug.Log("Power Up : " 
 					+ currentPlayer.PowerUps[0].powerUpType.ToString()
@@ -100,7 +102,7 @@ public class Shoot : MonoBehaviour
 					+ currentPlayer.name);
 
 				currentPlayer.usePowerUp();
-				GameObject.Find("GameManager").GetComponent<Game>().UI.updateCurrentPowerUp(currentPlayer);
+				Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", currentPlayer));
 
 			}
 		}
@@ -154,8 +156,36 @@ public class Shoot : MonoBehaviour
 		Debug.Log(currentPlayer.camera == null);
 	}
 
+	public void checkForOOB()
+	{
+		float distance;
+		RaycastHit hit;
+
+		foreach(player p in game.players)
+		{
+			distance = .01f;
+			distance += p.GetComponent<SphereCollider>().radius;
+
+			Debug.DrawRay(p.transform.position, Vector3.down *distance, Color.cyan);
+
+
+			if(Physics.Raycast(transform.position,Vector3.down, out hit, distance))
+			{
+				if(hit.transform.gameObject.GetComponent<Hole>() == game.currentHole.GetComponent<Hole>())
+				{
+					resetBallPosition();
+				}
+			}
+		}
+	}
+
 	public bool IsGrounded()
 	{
 		return Physics.Raycast(currentPlayer.ball.transform.position, -Vector3.up, distToGround + 0.3f);
+	}
+
+	void resetBallPosition()
+	{
+		
 	}
 }

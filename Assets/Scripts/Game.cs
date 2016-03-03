@@ -9,20 +9,21 @@ using System.Collections.Generic;
  *  are on in the array
  */
 
-public class Game : MonoBehaviour
+public class Game : MessageBehaviour
 {
 	
 	public Camera mainCamera;
 	public List<player> players;
 	private int currentPlayerNumber = 0;
 	public player currentPlayer {get; set;}
-	public ArrayList holes;
+	public Hole currentHole {get; set;}
+	public List<Hole> holes;
 	public UIManager UI;
-	private int currentHole {get; set;}
+	private int currentHoleInGame {get; set;}
 	private List<GameObject> Children = new List<GameObject>();
 
 	
-	void Start()
+	protected override void OnStart()
 	{
 		//Get Our UI Manager
 		UI = this.GetComponent<UIManager>();
@@ -31,8 +32,6 @@ public class Game : MonoBehaviour
 		UI.SwitchUIElement("InGameUI");
 
 		switchPlayer();
-
-		UI.updateCurrentPowerUp(currentPlayer);
 	}
 	
 	void Update()
@@ -43,21 +42,21 @@ public class Game : MonoBehaviour
 	
 	public void switchHole()
 	{
-		//End the ho	le if it is the last hole
-		if(currentHole == holes.Count)
+		//End the game if it is the last hole
+		if(currentHoleInGame == holes.Count)
 		{
 			endGame();
 		}
 	
 	  // Check that we started our counter 
 	  // else increment our current hole by 1
-		if(currentHole == null)
+		if(currentHoleInGame == null)
 		{
-			currentHole = 1;
+			currentHoleInGame = 1;
 		}
 		else
 		{
-			currentHole ++;
+			currentHoleInGame ++;
 		}
 	}
 	
@@ -114,10 +113,11 @@ public class Game : MonoBehaviour
 		currentPlayer.camera.GetComponent<OrbitCamera>().target = currentPlayer.cameraFocus;
 
 		//Set the gui components to match our current character
-		UI.updateGameInfo(currentPlayer.name,currentPlayer.strokes.ToString(), currentHole.ToString());
-	
+		//UI.updateGameInfo(currentPlayer.name,currentPlayer.strokes.ToString(), currentHole.ToString());
+		Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", currentPlayer));
+
 		//Set the power up element in the UI.
-		UI.updateCurrentPowerUp(currentPlayer);
+		//UI.updateCurrentPowerUp(currentPlayer); //This is getting merged into the call above;
 	}
 	
 	void showScoreCard()

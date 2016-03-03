@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class player : MonoBehaviour 
+public class player : MessageBehaviour
 {
 	//This Might Change to the game manager handling the camera
 	public GameObject camera;
@@ -22,11 +22,14 @@ public class player : MonoBehaviour
 		
 	//Allows the player to hold 2 power-ups at a time.
 	public powerUp[] PowerUps = new powerUp[2];
+
+	//Allows us to reset the ball if it goes out of bounds
+	public Vector3 lastStartingPosition;
 		
     // Use this for initialization
-    void Start () 
-    {
-    }
+	protected override void OnStart()
+	{
+	}
     
     // Update is called once per frame
     void Update () 
@@ -51,7 +54,7 @@ public class player : MonoBehaviour
 		if(this.gameObject.Equals(GameObject.Find("GameManager").GetComponent<Game>().currentPlayer));
 		{
 			//only change the ui if this player is the same as the current player
-			GameObject.Find("GameManager").GetComponent<Game>().UI.updateCurrentPowerUp(this);
+			Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", this));
 		}
     }
     
@@ -78,6 +81,8 @@ public class player : MonoBehaviour
 	// sets strokes back to zero and increments the hole number
     void holeReset()
     {
+		lastStartingPosition = GameObject.Find("GameManager").GetComponent<Game>().currentHole.startPoint.gameObject.transform.position;
+
     	//add our final stroke count to the scorecard
 		Score.Add(strokes);
     	

@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 public class Hole : MonoBehaviour 
 {
-	List<powerUp> powerUps = new List<powerUp>();
-	public GameObject holePowerUps;
-	public Vector3 startPoint;
+	List<GameObject> powerUps = new List<GameObject>();
+	GameObject holePowerUps;
+	public GameObject startPoint;
+	public string holeName;
 
 	// Use this for initialization
 	void Start () 
 	{
-		holePowerUps = this.gameObject.gameObject.transform.FindChild("HolePowerUps");
+		holePowerUps = this.gameObject.transform.FindChild("HolePowerUps").gameObject;
 
 		//Grab all PowerUps in the level (note not hole)
 		foreach (Transform child in holePowerUps.transform)

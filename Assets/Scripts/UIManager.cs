@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour 
+public class UIManager : MessageBehaviour
 {
 	//Get our UI Element
 	private GameObject GameUI;
 	private List<GameObject> Children = new List<GameObject>();
 
 	// Use this for initialization
-	void Start () 
+	protected override void OnStart () 
 	{
 		//Grab our game UI by tag
 		GameUI = GameObject.FindGameObjectWithTag("UI");
@@ -20,6 +20,11 @@ public class UIManager : MonoBehaviour
 		{
 			Children.Add(child.gameObject);
 		}
+
+		Messenger.RegisterListener(new Listener("UpdateCurrentPlayerInfo", gameObject, "HandlePlayerInfoChange"));
+		Messenger.RegisterListener(new Listener("UpdateCurrentPlayerInfo", gameObject, "HandlePowerUpChange"));
+
+		//Messenger.RegisterListener(new Listener("UpdateHoleInfo", gameObject, "HandleHoleInfoChange"));
 	}
 	
 	// Update is called once per frame
@@ -85,15 +90,15 @@ public class UIManager : MonoBehaviour
 		}
 	}
 		
-	public void updateCurrentPowerUp(player currentPlayer)
+	public void HandlePowerUpChange(CurrentPlayerMessage m)
 	{
 		Image powerUpImage = GameUI.transform.FindChild("InGameUI").FindChild("PowerMeter").FindChild("PowerUp").GetComponent<Image>();
 		string powerUpName;
 
 		//get the current player and see what their current powerup is
-		if(currentPlayer.PowerUps[0] != null)
+		if(m.CurrentPlayer.PowerUps[0] != null)
 		{
-			powerUpName = currentPlayer.PowerUps[0].powerUpType.ToString();
+			powerUpName = m.CurrentPlayer.PowerUps[0].powerUpType.ToString();
 		}
 		else
 		{
@@ -123,19 +128,28 @@ public class UIManager : MonoBehaviour
 		PowerMeter.fillAmount = power;
 	}
 
-	public void updateGameInfo(string name, string stroke, string hole)
+	public void HandlePlayerInfoChange(CurrentPlayerMessage m)
 	{
 		//reference our game info
 		Text nameText = GameUI.transform.FindChild("InGameUI").FindChild("GameInfo").FindChild("Name_tag")
 			.FindChild("Name").GetComponent<Text>();
 		Text strokeText = GameUI.transform.FindChild("InGameUI").FindChild("GameInfo").FindChild("stroke_tag")
 			.FindChild("stroke").GetComponent<Text>();
+
+		//set our game info
+		nameText.text = m.CurrentPlayer.name;
+		strokeText.text = m.CurrentPlayer.strokes.ToString();
+	}
+
+	public void HandleHoleInfoChange(HoleInfoMessage m)
+	{
+		Debug.Log("Player Info Changed");
+
+		//reference our game info
 		Text courseText = GameUI.transform.FindChild("InGameUI").FindChild("GameInfo").FindChild("course_tag")
 			.FindChild("course").GetComponent<Text>();
 
-		//set our game info
-		nameText.text = name;
-		strokeText.text = stroke;
-		courseText.text = hole;
+		//set our hole info
+		courseText.text = m.Hole;
 	}
 }

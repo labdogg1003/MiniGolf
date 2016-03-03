@@ -43,6 +43,26 @@ public class NewPlayerMessage : Message
 	}
 }
 
+public class CurrentPlayerMessage : Message 
+{
+	public player CurrentPlayer {get; set;}
+
+	public CurrentPlayerMessage(GameObject source, string name, player _currentPlayer) : base(source,name)
+	{
+		CurrentPlayer = _currentPlayer;
+	}
+}
+
+public class HoleInfoMessage : Message 
+{
+	public string Hole {get;set;}
+
+	public HoleInfoMessage(GameObject source, string name, string _Hole) : base(source,name)
+	{
+		Hole = _Hole;
+	}
+}
+
 public class HoleFinishedMessage : Message 
 {
 
@@ -86,8 +106,8 @@ public class MessageBehaviour : MonoBehaviour {
 	public void Start()
 	{
 		
-		Messenger = GameObject.Find("World").GetComponent<MessageManager>();
-		if(!Messenger) Debug.LogError("World.MessageManager could not be found.  Insure there is a World object with a MessageManager script attached.");
+		Messenger = GameObject.Find("GameManager").GetComponent<MessageManager>();
+		if(!Messenger) Debug.LogError("GameManager.MessageManager could not be found.  Insure there is a World object with a MessageManager script attached.");
 		OnStart();
 	}
 	
