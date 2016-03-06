@@ -76,6 +76,29 @@ public class player : MessageBehaviour
       }
     }
     
+	//Reset back to the last known good starting position.
+	public void reset()
+	{
+		//Check if our last position is zero.
+		if(lastStartingPosition == Vector3.zero)
+		{
+			lastStartingPosition = GameObject.Find("GameManager").GetComponent<Game>().
+				currentHole.startPoint.gameObject.transform.position;
+		}
+
+		//Set this balls position to the last position it was "safe" at.
+		this.ball.transform.position = lastStartingPosition;
+
+		//If the last starting position is the same as the start of the whole make the 
+		//current gameobject inactive so that it cant interfere with the current player
+		if(lastStartingPosition == GameObject.Find("GameManager").GetComponent<Game>().
+			currentHole.startPoint.gameObject.transform.position)
+		{
+			
+			this.gameObject.SetActive(false);
+		}
+	}
+
     
 	// This method adds the stroke amount to the score list
 	// sets strokes back to zero and increments the hole number

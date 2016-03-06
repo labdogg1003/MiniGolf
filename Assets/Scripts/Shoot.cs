@@ -14,6 +14,7 @@ public class Shoot : MessageBehaviour
 
 	public bool hasBeenHit = false;
 	public bool canShoot = true;
+	private bool canChange = false;
 
 	private Game game;
 
@@ -27,10 +28,12 @@ public class Shoot : MessageBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		canChange = false;
+
 		currentPlayer = FindObjectOfType<Game>().currentPlayer;
 
-		Debug.DrawRay(currentPlayer.ball.transform.position, 
-			getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
+		//Debug.DrawRay(currentPlayer.ball.transform.position, 
+		//	getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
@@ -107,14 +110,27 @@ public class Shoot : MessageBehaviour
 			}
 		}
 
-		//Check that the ball has already been hit and that it is sleeping to end their turn
-		if(hasBeenHit && currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping())
+		//Check that the all balls are sleeping before we change.
+		foreach(player p in game.players)
 		{
-			
+			if(p.ball.GetComponent<Rigidbody>().IsSleeping())
+			{ 
+				canChange = true;
+			}
+			else
+			{
+				canChange = false;
+			}
+		}
+
+		//Check that the ball has already been hit and that it is sleeping to end their turn
+		if(hasBeenHit && currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping() && canChange)
+		{
+			GameObject.Find("GameManager").GetComponent<Game>().checkForOOB();
 			changeCamera();
 
 			FindObjectOfType<Game>().switchPlayer();
-			Debug.Log("Turn Over Switching To Next Player");
+			//Debug.Log("Turn Over Switching To Next Player");
 		}
 
 		float powerPerc = (power / 3.0f) / 2;
@@ -153,39 +169,11 @@ public class Shoot : MessageBehaviour
 	{
 		
 		currentPlayer.camera = null;
-		Debug.Log(currentPlayer.camera == null);
-	}
-
-	public void checkForOOB()
-	{
-		float distance;
-		RaycastHit hit;
-
-		foreach(player p in game.players)
-		{
-			distance = .01f;
-			distance += p.GetComponent<SphereCollider>().radius;
-
-			Debug.DrawRay(p.transform.position, Vector3.down *distance, Color.cyan);
-
-
-			if(Physics.Raycast(transform.position,Vector3.down, out hit, distance))
-			{
-				if(hit.transform.gameObject.GetComponent<Hole>() == game.currentHole.GetComponent<Hole>())
-				{
-					resetBallPosition();
-				}
-			}
-		}
+		//Debug.Log(currentPlayer.camera == null);
 	}
 
 	public bool IsGrounded()
 	{
 		return Physics.Raycast(currentPlayer.ball.transform.position, -Vector3.up, distToGround + 0.3f);
-	}
-
-	void resetBallPosition()
-	{
-		
 	}
 }

@@ -8,6 +8,7 @@ public class Hole : MonoBehaviour
 	GameObject holePowerUps;
 	public GameObject startPoint;
 	public string holeName;
+	public int par = 3;
 
 	// Use this for initialization
 	void Start () 
