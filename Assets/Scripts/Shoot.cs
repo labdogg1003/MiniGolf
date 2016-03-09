@@ -28,12 +28,11 @@ public class Shoot : MessageBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+
+		Debug.Log(hasBeenHit);
 		canChange = false;
 
 		currentPlayer = FindObjectOfType<Game>().currentPlayer;
-
-		//Debug.DrawRay(currentPlayer.ball.transform.position, 
-		//	getPlanarForward(currentPlayer.camera.gameObject), Color.green, 4, false);
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
@@ -130,6 +129,7 @@ public class Shoot : MessageBehaviour
 			changeCamera();
 
 			FindObjectOfType<Game>().switchPlayer();
+
 			//Debug.Log("Turn Over Switching To Next Player");
 		}
 
