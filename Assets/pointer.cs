@@ -21,7 +21,7 @@ public class pointer : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		Debug.Log("current Player" + game.currentPlayer.name);
+		//Debug.Log("current Player" + game.currentPlayer.name);
 		if(!shoot.hasBeenHit)
 		{
 			line.enabled = true;

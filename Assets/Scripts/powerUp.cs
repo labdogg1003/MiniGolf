@@ -1,24 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum powerupType{spring};
-
 public class powerUp : MonoBehaviour
 {
-	public powerupType powerUpType;
 	float ShrinkScale = 0.00001f;
 	float GrowScale = 0.019f;
-	float shrinkSpeed = 10f;
-	float growSpeed = 5f;
+	float shrinkSpeed = .25f;
+	float growSpeed = .25f;
 
 	//power up variables
-	private int springPower = 1000;
 	public bool active = true;
-
 
 	// Use this for initialization
 	void Start () 
 	{
+		GrowScale = this.gameObject.transform.localScale.x;
 	}
 	
 	// Update is called once per frame
@@ -27,16 +23,8 @@ public class powerUp : MonoBehaviour
 	}
 
 	//pass our player into the powerUp
-	public void usePowerUp(player player)
+	public virtual void usePowerUp(player player)
 	{
-		switch (powerUpType)
-		{
-			case powerupType.spring:
-				player.ball.GetComponent<Rigidbody>().AddForce(Vector3.up * (springPower));
-				break;
-			default:
-				break;
-		}
 	}
 
 	void OnTriggerEnter(Collider obj)
@@ -67,11 +55,12 @@ public class powerUp : MonoBehaviour
 
 		if (active)
 		{
-			while(elapsedTime < growSpeed)
+			while(elapsedTime < shrinkSpeed)
 			{
-				this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(GrowScale,GrowScale,GrowScale),elapsedTime / growSpeed);
+				this.transform.localScale = Vector3.Lerp(this.transform.localScale, new Vector3(GrowScale, GrowScale, GrowScale), elapsedTime / shrinkSpeed);
 				elapsedTime += Time.deltaTime;
 				yield return new WaitForEndOfFrame();
+
 			}
 		}
 	}
@@ -79,7 +68,7 @@ public class powerUp : MonoBehaviour
 	public void respawn()
 	{
 		active = true;
-		checkActive();
+		StartCoroutine(checkActive());
 	}
 }
 

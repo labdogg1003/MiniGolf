@@ -28,24 +28,22 @@ public class Shoot : MessageBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-
-		Debug.Log(hasBeenHit);
 		canChange = false;
 
 		currentPlayer = FindObjectOfType<Game>().currentPlayer;
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
-		if (!Input.GetMouseButton(0)) 
+		if ((!Input.GetMouseButton(0) || Input.GetKey("space")))
 		{
 			zeroTime = 0;
 		}
 		
 		if (zeroTime < 1) 
 		{
-			if (Input.GetMouseButton(0) && !hasBeenHit) 
+			if ((Input.GetMouseButton(0) || Input.GetKeyDown("space")) && !hasBeenHit) 
 			{
-				if (Input.GetMouseButtonDown(0))
+				if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown("space")))
 				{
 					//reset power
 					resetPower();
@@ -68,7 +66,7 @@ public class Shoot : MessageBehaviour
 			}
 		
 
-			if (Input.GetMouseButtonDown(0))
+			if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
 			{
 				//reset power
 				resetPower();
@@ -81,7 +79,7 @@ public class Shoot : MessageBehaviour
 
 			// Here we need to check multiple boolean statements to make sure we are
 			// first able to hit the ball and second that we are ready to hit the ball
-			if (Input.GetMouseButtonUp(0) && shootBall == true && !hasBeenHit && power > 0.001f) {
+			if ((Input.GetMouseButtonUp(0) || Input.GetKeyUp("space")) && shootBall == true && !hasBeenHit && power > 0.001f) {
 				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
 				//stop shooting the ball
@@ -99,7 +97,7 @@ public class Shoot : MessageBehaviour
 			if (Input.GetKeyDown("space") && currentPlayer.ball.GetComponent<Rigidbody>().velocity.magnitude > 0.001f) 
 			{
 				Debug.Log("Power Up : " 
-					+ currentPlayer.PowerUps[0].powerUpType.ToString()
+					+ currentPlayer.PowerUps[0].ToString()
 					+ " used by "
 					+ currentPlayer.name);
 

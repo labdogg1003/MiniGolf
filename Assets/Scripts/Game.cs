@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -60,12 +61,14 @@ public class Game : MessageBehaviour
 		{
 			currentHoleInGame ++;
 		}
+
 		setCurrentHole();
 	}
 	
 	void endGame()
 	{
 		//TODO: Create the end game method
+		SceneManager.LoadScene("EndGame");
 	}
 	
 	void addPlayer( player player )
@@ -81,6 +84,49 @@ public class Game : MessageBehaviour
 	//Shoot Script references this when it sees that 
 	//the current player is done with their turn.
 	public void switchPlayer()
+	{
+
+		if(CheckSwitchHole())
+		{
+			switchHole();
+		}
+
+		switchCurrentPlayerBase();
+
+		currentPlayer.gameObject.SetActive(true);
+
+		if(currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping())
+		{
+			checkForOOB();
+		}
+
+		//reset the hit boolean values
+		mainCamera.GetComponent<Shoot>().canShoot = true;
+		mainCamera.GetComponent<Shoot>().hasBeenHit = false;
+
+		//Switch Camera to current player
+		currentPlayer.camera = mainCamera.gameObject;
+		currentPlayer.camera.GetComponent<OrbitCamera>().target = currentPlayer.cameraFocus;
+
+		//Get all the power-ups that are on this hole
+		powerUp[] temp = currentHole.gameObject.GetComponentsInChildren<powerUp>();
+
+		//reset all the power-ups;
+		foreach(powerUp powerUp in temp)
+		{
+			powerUp.respawn();
+		}
+
+
+		//Set the gui components to match our current character
+		//UI.updateGameInfo(currentPlayer.name,currentPlayer.strokes.ToString(), currentHole.ToString());
+		Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", currentPlayer));
+
+		//Set the power up element in the UI.
+		//UI.updateCurrentPowerUp(currentPlayer); //This is got merged into the call above;
+	}
+
+	void switchCurrentPlayerBase()
 	{
 		if (currentPlayer == null) 
 		{
@@ -107,30 +153,13 @@ public class Game : MessageBehaviour
 
 			//set our current player to the next player
 			currentPlayer = (player)players[currentPlayerNumber];
-
 		}
 
-		currentPlayer.gameObject.SetActive(true);
-
-		if(currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping())
+		if(currentPlayer.hole_finished)
 		{
-			checkForOOB();
+			Debug.Log("hole finished already");
+			switchCurrentPlayerBase();
 		}
-
-		//reset the hit boolean values
-		mainCamera.GetComponent<Shoot>().canShoot = true;
-		mainCamera.GetComponent<Shoot>().hasBeenHit = false;
-
-		//Switch Camera to current player
-		currentPlayer.camera = mainCamera.gameObject;
-		currentPlayer.camera.GetComponent<OrbitCamera>().target = currentPlayer.cameraFocus;
-
-		//Set the gui components to match our current character
-		//UI.updateGameInfo(currentPlayer.name,currentPlayer.strokes.ToString(), currentHole.ToString());
-		Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", currentPlayer));
-
-		//Set the power up element in the UI.
-		//UI.updateCurrentPowerUp(currentPlayer); //This is got merged into the call above;
 	}
 
 	void setCurrentHole()
@@ -140,6 +169,21 @@ public class Game : MessageBehaviour
 		{
 			p.reset();
 		}
+	}
+
+	bool CheckSwitchHole()
+	{
+		//check if any players have not finished the hole
+		foreach(player p in players)
+		{
+			if(!p.hole_finished)
+			{
+				return false;
+			}
+		}
+
+		//if we make it through the hole list of players we can switch holes
+		return true;
 	}
 
 	public void checkForOOB()

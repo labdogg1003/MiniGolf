@@ -77,7 +77,7 @@ public class OrbitCamera : MonoBehaviour
 
 			//Slerp the camera movement so that we have a smooth transition between positions and rotations
 			transform.rotation = Quaternion.Slerp(transform.rotation,rotation,.7f);
-			transform.position = Vector3.Slerp(transform.position,position, .7f);
+			transform.position = position;
 		}
 	}
 

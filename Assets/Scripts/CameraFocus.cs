@@ -14,6 +14,6 @@ public class CameraFocus : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		this.transform.position = Vector3.Slerp(this.transform.position, new Vector3(target.transform.position.x, target.transform.position.y + 2, target.transform.position.z), .2f);
+		this.transform.position = new Vector3(target.transform.position.x, target.transform.position.y + 2, target.transform.position.z);
 	}
 }

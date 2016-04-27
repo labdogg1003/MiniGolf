@@ -98,7 +98,7 @@ public class UIManager : MessageBehaviour
 		//get the current player and see what their current powerup is
 		if(m.CurrentPlayer.PowerUps[0] != null)
 		{
-			powerUpName = m.CurrentPlayer.PowerUps[0].powerUpType.ToString();
+			powerUpName = m.CurrentPlayer.PowerUps[0].ToString();
 		}
 		else
 		{
@@ -108,7 +108,7 @@ public class UIManager : MessageBehaviour
 		//load that sprite into the power up texture.
 		switch(powerUpName)
 		{
-			case "spring":
+		case "springPowerUp (SpringPowerUp)":
 				{
 					powerUpImage.overrideSprite = Resources.Load<Sprite>("PowerUpTextures/SpringPowerUpTexture");
 					break;	

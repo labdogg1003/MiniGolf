@@ -14,7 +14,7 @@ public class player : MessageBehaviour
 	public ArrayList Score;
 		
 	//Check that user has finished the hole
-	private bool hole_finished = false;
+	public bool hole_finished = false;
 
 		
 	//Holds the strokes for the hole, reset at the start of each hole
@@ -91,8 +91,8 @@ public class player : MessageBehaviour
 
 		//If the last starting position is the same as the start of the whole make the 
 		//current gameobject inactive so that it cant interfere with the current player
-		if(lastStartingPosition == GameObject.Find("GameManager").GetComponent<Game>().
-			currentHole.startPoint.gameObject.transform.position)
+		if((lastStartingPosition == GameObject.Find("GameManager").GetComponent<Game>().
+			currentHole.startPoint.gameObject.transform.position) || hole_finished)
 		{
 			
 			this.gameObject.SetActive(false);
