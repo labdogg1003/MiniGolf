@@ -5,7 +5,6 @@ public class pointer : MonoBehaviour
 {
 	public Camera mainCamera;
 	private LineRenderer line;
-	private Game game;
 	private Shoot shoot;
 	public float maxDistance = 2;
 	public float distance;
@@ -14,7 +13,6 @@ public class pointer : MonoBehaviour
 	void Start () 
 	{
 		line = this.GetComponent<LineRenderer>();
-		game = GameObject.Find("GameManager").GetComponent<Game>();
 		shoot = mainCamera.GetComponent<Shoot>();
 	}
 	
@@ -25,11 +23,11 @@ public class pointer : MonoBehaviour
 		if(!shoot.hasBeenHit)
 		{
 			line.enabled = true;
-			line.SetPosition(0,game.currentPlayer.ball.transform.position);
+			line.SetPosition(0,Game.Instance.currentPlayer.ball.transform.position);
 
 			distance = maxDistance;
 			checkDistance();
-			line.SetPosition(1,game.currentPlayer.ball.transform.position + getPlanarForward(mainCamera.gameObject) * distance);
+			line.SetPosition(1,Game.Instance.currentPlayer.ball.transform.position + getPlanarForward(mainCamera.gameObject) * distance);
 		}
 		else
 		{
@@ -51,7 +49,7 @@ public class pointer : MonoBehaviour
 	public void checkDistance()
 	{
 		RaycastHit hit;
-		if(Physics.Raycast(game.currentPlayer.ball.transform.position, 
+		if(Physics.Raycast(Game.Instance.currentPlayer.ball.transform.position, 
 			getPlanarForward(mainCamera.gameObject),out hit, maxDistance))
 		{
 			distance = hit.distance;

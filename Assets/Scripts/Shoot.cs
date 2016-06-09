@@ -16,13 +16,12 @@ public class Shoot : MessageBehaviour
 	public bool canShoot = true;
 	private bool canChange = false;
 
-	private Game game;
-
+	public AudioClip hitSound;
+	public float hitVolume;
 
 	// Use this for initialization
 	protected override void OnStart () 
 	{
-		game = GameObject.FindObjectOfType<Game>();
 	}
 
 	// Update is called once per frame
@@ -30,7 +29,7 @@ public class Shoot : MessageBehaviour
 	{
 		canChange = false;
 
-		currentPlayer = FindObjectOfType<Game>().currentPlayer;
+		currentPlayer = Game.Instance.currentPlayer;
 
 		distToGround = currentPlayer.ball.GetComponent<Collider>().bounds.extents.y;
 
@@ -82,13 +81,15 @@ public class Shoot : MessageBehaviour
 			if ((Input.GetMouseButtonUp(0) || Input.GetKeyUp("space")) && shootBall == true && !hasBeenHit && power > 0.001f) {
 				currentPlayer.ball.GetComponent<Rigidbody>().AddForce(getPlanarForward(currentPlayer.camera) * (power * PowerMultiplier));
 
+				AudioManager.PlaySoundEffect(hitSound,hitVolume);
+
 				//stop shooting the ball
 				shootBall = false;
 
 				resetPower();
 
 				//get our currentplayer and increment their strokes
-				FindObjectOfType<Game>().currentPlayer.strokes++;
+				Game.Instance.currentPlayer.strokes++;
 
 				//Dont Allow Them to Shoot Again
 				hasBeenHit = true;
@@ -108,7 +109,7 @@ public class Shoot : MessageBehaviour
 		}
 
 		//Check that the all balls are sleeping before we change.
-		foreach(player p in game.players)
+		foreach(player p in Game.Instance.players)
 		{
 			if(p.ball.GetComponent<Rigidbody>().IsSleeping())
 			{ 
@@ -123,16 +124,16 @@ public class Shoot : MessageBehaviour
 		//Check that the ball has already been hit and that it is sleeping to end their turn
 		if(hasBeenHit && currentPlayer.ball.GetComponent<Rigidbody>().IsSleeping() && canChange)
 		{
-			GameObject.Find("GameManager").GetComponent<Game>().checkForOOB();
+			Game.Instance.checkForOOB();
 			changeCamera();
 
-			FindObjectOfType<Game>().switchPlayer();
+			Game.Instance.switchPlayer();
 
 			//Debug.Log("Turn Over Switching To Next Player");
 		}
 
 		float powerPerc = (power / 3.0f) / 2;
-		GameObject.Find("GameManager").GetComponent<Game>().UI.updatePowerMeter(powerPerc);
+		Game.Instance.UI.updatePowerMeter(powerPerc);
 	}
 
 	public static Vector3 getPlanarForward(GameObject t)

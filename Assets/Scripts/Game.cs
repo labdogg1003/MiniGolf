@@ -23,7 +23,15 @@ public class Game : MessageBehaviour
 	private int currentHoleInGame {get; set;}
 	private List<GameObject> Children = new List<GameObject>();
 
-	
+	// Static singleton property
+	public static Game Instance { get; private set; }
+
+	void Awake()
+	{
+		// Save a reference to the AudioHandler component as our singleton instance
+		Instance = this;
+	}
+
 	protected override void OnStart()
 	{
 		//Get Our UI Manager

@@ -51,7 +51,7 @@ public class player : MessageBehaviour
 		PowerUps[0] = p;
       }
 
-		if(this.gameObject.Equals(GameObject.Find("GameManager").GetComponent<Game>().currentPlayer));
+		if(this.gameObject.Equals(Game.Instance.currentPlayer));
 		{
 			//only change the ui if this player is the same as the current player
 			Messenger.SendToListeners(new CurrentPlayerMessage(gameObject, "UpdateCurrentPlayerInfo", this));
@@ -82,7 +82,7 @@ public class player : MessageBehaviour
 		//Check if our last position is zero.
 		if(lastStartingPosition == Vector3.zero)
 		{
-			lastStartingPosition = GameObject.Find("GameManager").GetComponent<Game>().
+			lastStartingPosition = Game.Instance.
 				currentHole.startPoint.gameObject.transform.position;
 		}
 
@@ -91,7 +91,7 @@ public class player : MessageBehaviour
 
 		//If the last starting position is the same as the start of the whole make the 
 		//current gameobject inactive so that it cant interfere with the current player
-		if((lastStartingPosition == GameObject.Find("GameManager").GetComponent<Game>().
+		if((lastStartingPosition == Game.Instance.
 			currentHole.startPoint.gameObject.transform.position) || hole_finished)
 		{
 			
@@ -104,7 +104,7 @@ public class player : MessageBehaviour
 	// sets strokes back to zero and increments the hole number
     void holeReset()
     {
-		lastStartingPosition = GameObject.Find("GameManager").GetComponent<Game>().currentHole.startPoint.gameObject.transform.position;
+		lastStartingPosition = Game.Instance.currentHole.startPoint.gameObject.transform.position;
 
     	//add our final stroke count to the scorecard
 		Score.Add(strokes);

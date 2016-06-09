@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BallPhysics : MonoBehaviour {
+public class BallPhysics : MonoBehaviour 
+{
+	public AudioClip hitSound;
 
 	// Use this for initialization
 	void Start () 
@@ -23,20 +25,9 @@ public class BallPhysics : MonoBehaviour {
 
 	public void OnCollisionStay(Collision collisionInfo)
 	{
-		//Debug.Log(GetComponent<Rigidbody>().velocity.x + GetComponent<Rigidbody>().velocity.y + GetComponent<Rigidbody>().velocity.z);
-		if (Mathf.Abs((GetComponent<Rigidbody>().velocity.x + GetComponent<Rigidbody>().velocity.y + GetComponent<Rigidbody>().velocity.z)) > 0.1f) {
-			//if ((GetComponent<Rigidbody>().velocity.x + GetComponent<Rigidbody>().velocity.y + GetComponent<Rigidbody>().velocity.z) < 1.2) {
-				//GetComponent<Rigidbody>().angularDrag += Time.deltaTime ;
-				//GetComponent<Rigidbody>().drag += Time.deltaTime * .05f ;
-			//}
-		} else if(GetComponent<Rigidbody>().IsSleeping())
+		if(collisionInfo.gameObject.CompareTag("brick"))
 		{
-			//GetComponent<Rigidbody>().drag = .05f;
-			
-		}
-		if (!GetComponent<Rigidbody>().IsSleeping() && (GetComponent<Rigidbody>().velocity.x + GetComponent<Rigidbody>().velocity.y + GetComponent<Rigidbody>().velocity.z) < .1f) 
-		{
-			
+			AudioManager.PlaySoundEffect(hitSound,.3f,0);
 		}
 	}
 }

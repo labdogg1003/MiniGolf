@@ -3,6 +3,8 @@ using System.Collections;
 
 public class HoleEnd : MonoBehaviour {
 
+	public AudioClip holeSound;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -23,6 +25,7 @@ public class HoleEnd : MonoBehaviour {
 			Debug.Log("finished");
 			//Tell the player that they finished the hole;
 			col.gameObject.GetComponentInParent<player>().hole_finished = true;
+			AudioManager.PlaySoundEffect(holeSound);
 		}
 	}
 }

@@ -1,4 +1,6 @@
-﻿// Uses geometry normals to distort the image behind, and
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+// Uses geometry normals to distort the image behind, and
 // an additional texture to tint the color.
 
 Shader ".water/refraction"
@@ -59,8 +61,8 @@ Shader ".water/refraction"
 				o.oPosition = mul(UNITY_MATRIX_MVP , i.position);
 				o.oTexCoord = i.texCoord;
 
-				float3 positionW = mul(_Object2World, i.position).xyz;
-				float3 N = mul((float3x3)_Object2World, i.normal);
+				float3 positionW = mul(unity_ObjectToWorld, i.position).xyz;
+				float3 N = mul((float3x3)unity_ObjectToWorld, i.normal);
 				N = normalize(N);
 
 				// Compute the incident and refracted vectors
